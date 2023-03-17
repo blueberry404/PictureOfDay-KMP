@@ -1,4 +1,4 @@
-package com.example.musicapp_kmp
+package com.blueberry.kmp_apod
 
 import androidx.compose.runtime.Composable
 

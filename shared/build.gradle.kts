@@ -3,6 +3,7 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     id("org.jetbrains.compose")
+    kotlin("plugin.serialization")
 }
 
 kotlin {
@@ -49,12 +50,19 @@ kotlin {
     }
 
     sourceSets {
+        val ktorVersion = "2.2.3"
         val commonMain by getting {
             dependencies {
                 implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.runtime)
+                implementation("io.github.qdsfdhvh:image-loader:1.2.10")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation("com.soywiz.korlibs.klock:klock:4.0.0-alpha-3")
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
             }
         }
         val commonTest by getting {
@@ -63,10 +71,18 @@ kotlin {
             }
         }
 
-        val androidMain by getting
+        val androidMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+            }
+        }
         val androidUnitTest by getting
         val iosMain by getting {
             dependsOn(commonMain)
+            dependencies {
+                implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+                implementation("io.ktor:ktor-client-ios:$ktorVersion")
+            }
         }
         val iosSimulatorArm64Main by getting {
             dependsOn(iosMain)
@@ -75,6 +91,8 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.common)
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
+                implementation("io.ktor:ktor-client-cio:$ktorVersion")
             }
         }
 
@@ -98,7 +116,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.example.musicapp_kmp"
+    namespace = "com.blueberry.kmp_apod"
     compileSdk = 33
     defaultConfig {
         minSdk = 24

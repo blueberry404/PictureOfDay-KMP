@@ -5,6 +5,7 @@ plugins {
     kotlin("android").version("1.8.0").apply(false)
     kotlin("multiplatform").version("1.8.0").apply(false)
     kotlin("jvm") apply false
+    kotlin("plugin.serialization").version("1.8.0").apply(false)
 }
 
 allprojects {

@@ -1,7 +1,7 @@
-package com.example.travelapp_kmp
+package com.blueberry.travelapp_kmp
 
 import androidx.compose.runtime.Composable
-import com.example.musicapp_kmp.MainCommon
+import com.blueberry.kmp_apod.MainCommon
 
 @Composable
 fun CommonMainDesktop() {

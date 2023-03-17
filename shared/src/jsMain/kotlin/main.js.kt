@@ -1,5 +1,5 @@
 import androidx.compose.runtime.Composable
-import com.example.musicapp_kmp.MainCommon
+import com.blueberry.kmp_apod.MainCommon
 
 
 @Composable

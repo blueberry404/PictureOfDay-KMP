@@ -4,10 +4,10 @@ plugins {
 }
 
 android {
-    namespace = "com.example.musicapp_kmp.android"
+    namespace = "com.blueberry.kmp_apod.android"
     compileSdk = 33
     defaultConfig {
-        applicationId = "com.example.musicapp_kmp.android"
+        applicationId = "com.blueberry.kmp_apod.android"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
