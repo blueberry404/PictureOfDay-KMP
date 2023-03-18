@@ -1,25 +1,27 @@
 package com.blueberry.kmp_apod
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.blueberry.kmp_apod.data.AstronomyPicture
+import com.blueberry.kmp_apod.dates.DatesWidget
 import com.seiko.imageloader.rememberAsyncImagePainter
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -28,8 +30,34 @@ internal fun PictureOfDayScreen(
     vm: AstronomyPictureViewModel
 ) {
     val state = vm.pictureInfo.collectAsState()
+    var isDatesVisible by remember { mutableStateOf(false) }//mutableStateOf(vm.pictureInfo.value.showDates) }
+
+    LaunchedEffect(Unit) {
+        delay(3000L)
+        isDatesVisible = true
+    }
+
     state.value.astronomyPicture?.let {
-        ApodContent(modifier = modifier, astronomyPicture = it)
+        Column(modifier.background(Color.Black)) {
+            ApodContent(modifier = modifier.fillMaxWidth().weight(1f), astronomyPicture = it)
+            AnimatedVisibility(visible = isDatesVisible,
+                enter = slideInVertically(
+                    animationSpec = tween(400),
+                    initialOffsetY = { fullHeight -> fullHeight }
+                ),
+                exit = slideOutVertically(
+                    animationSpec = tween(400),
+                    targetOffsetY = { fullHeight -> fullHeight }
+                )
+            ) {
+                DatesWidget(
+                    modifier = modifier,
+                    state.value.dates
+                ) {
+                    isDatesVisible = false
+                }
+            }
+        }
     }
 }
 
@@ -38,7 +66,6 @@ internal fun ApodContent(modifier: Modifier = Modifier, astronomyPicture: Astron
     val scrollState = rememberScrollState()
     Column(
         modifier = modifier
-            .background(Color.Black)
             .scrollable(scrollState, Orientation.Vertical),
     ) {
         val painter = rememberAsyncImagePainter(astronomyPicture.url.orEmpty())

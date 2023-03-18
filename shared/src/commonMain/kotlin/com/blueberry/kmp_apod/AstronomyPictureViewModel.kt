@@ -2,6 +2,7 @@ package com.blueberry.kmp_apod
 
 import com.blueberry.kmp_apod.data.AstronomyPicture
 import com.blueberry.kmp_apod.data.AstronomyPictureRepository
+import com.blueberry.kmp_apod.dates.AstronomyDate
 import com.soywiz.klock.DateTime
 import com.soywiz.klock.ISO8601
 import kotlinx.coroutines.CoroutineScope
@@ -16,18 +17,37 @@ class AstronomyPictureViewModel {
 
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Main)
     private val repository = AstronomyPictureRepository()
+    private var dates: List<AstronomyDate> = emptyList()
 
     init {
         val currentDate = DateTime.now().format(ISO8601.DATE_CALENDAR_COMPLETE)
         pictureInfo.update { AstronomyPictureState(isLoading = true, selectedDate = currentDate) }
+        calculateDates()
         getPictureInfo(currentDate)
     }
 
-    fun getPictureInfo(selectedDate: String) {
+    private fun getPictureInfo(selectedDate: String) {
         scope.launch {
             val response = repository.getPictureOfDay(selectedDate)
-            pictureInfo.update { it.copy(astronomyPicture = response, isLoading = false) }
+            pictureInfo.update {
+                it.copy(
+                    astronomyPicture = response,
+                    isLoading = false,
+                    showDates = true,
+                    dates = dates
+                )
+            }
         }
+    }
+
+    private fun calculateDates() {
+        dates = listOf(
+            AstronomyDate("Mar", "14", "Tues", false),
+            AstronomyDate("Mar", "15", "Wed", false),
+            AstronomyDate("Mar", "16", "Thus", false),
+            AstronomyDate("Mar", "17", "Fri", false),
+            AstronomyDate("Mar", "18", "Sat", true),
+        )
     }
 }
 
@@ -35,4 +55,6 @@ data class AstronomyPictureState(
     val astronomyPicture: AstronomyPicture? = null,
     val isLoading: Boolean = false,
     val selectedDate: String? = null,
+    val showDates: Boolean = false,
+    val dates: List<AstronomyDate> = emptyList(),
 )
