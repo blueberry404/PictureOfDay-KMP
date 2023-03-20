@@ -59,7 +59,7 @@ kotlin {
                 implementation(compose.runtime)
                 implementation("io.github.qdsfdhvh:image-loader:1.2.10")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("com.soywiz.korlibs.klock:klock:4.0.0-alpha-3")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
