@@ -20,13 +20,13 @@ class AstronomyPictureService {
         }
     }
 
-    suspend fun getPictureOfDay(date: String): AstronomyPicture {
+    suspend fun getPictureOfDay(date: String): RemoteAstronomyPicture {
         val response = client.get(APOD_URL) {
             url {
-                parameters.append("api_key", "<API key here>")
+                parameters.append("api_key", "")
                 parameters.append("date", date)
             }
-        }.body<AstronomyPicture>()
+        }.body<RemoteAstronomyPicture>()
         return response
     }
 

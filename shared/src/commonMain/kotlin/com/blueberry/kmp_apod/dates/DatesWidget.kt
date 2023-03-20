@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.blueberry.kmp_apod.Constants
 
 @Composable
 internal fun DatesWidget(
@@ -31,7 +32,7 @@ internal fun DatesWidget(
         Row(modifier = Modifier.fillMaxWidth().wrapContentSize()) {
             dates.forEach { dateInfo ->
                 Box(Modifier.width(columnWidth).background(
-                    if (dateInfo.isSelected) Color(0, 128, 128) else Color.White
+                    if (dateInfo.isSelected) Constants.getTealColor() else Color.White
                 ).padding(8.dp).clickable {
                     onDateSelected(dateInfo)
                 }) {

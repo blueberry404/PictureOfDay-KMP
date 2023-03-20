@@ -119,7 +119,7 @@ android {
     namespace = "com.blueberry.kmp_apod"
     compileSdk = 33
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
     }
 }
