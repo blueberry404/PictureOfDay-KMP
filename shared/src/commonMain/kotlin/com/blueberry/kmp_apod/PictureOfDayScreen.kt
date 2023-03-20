@@ -21,8 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.blueberry.kmp_apod.data.AstronomyPicture
 import com.blueberry.kmp_apod.dates.DatesWidget
+import com.blueberry.kmp_apod.progressindicator.SemiCircleSpinProgressIndicator
 import com.seiko.imageloader.rememberAsyncImagePainter
 
 
@@ -35,60 +37,74 @@ internal fun PictureOfDayScreen(
     val state = vm.pictureInfo.collectAsState()
     val isDatesVisible = vm.pictureInfo.value.showDates
 
-    state.value.astronomyPicture?.let {
-        Column(modifier.background(Color.Black)) {
-            ApodContent(modifier = modifier.fillMaxWidth().weight(1f), astronomyPicture = it)
-            AnimatedVisibility(
-                visible = !isDatesVisible,
-                enter = scaleIn(),
-                exit = scaleOut(),
-            ) {
-                Box(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+        if(state.value.isLoading) {
+            Column(modifier = Modifier.fillMaxSize().zIndex(2.0f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                SemiCircleSpinProgressIndicator(color = Color.Yellow)
+            }
+        }
+        state.value.astronomyPicture?.let {
+            Column(modifier.background(Color.Black)) {
+                ApodContent(modifier = modifier.fillMaxWidth().weight(1f), astronomyPicture = it)
+                AnimatedVisibility(
+                    visible = !isDatesVisible,
+                    enter = scaleIn(),
+                    exit = scaleOut(),
+                ) {
+                    FooterNote { vm.toggleDatesVisibility(true) }
+                }
+                AnimatedVisibility(visible = isDatesVisible,
+                    enter = slideInVertically(
+                        animationSpec = tween(400),
+                        initialOffsetY = { fullHeight -> fullHeight }
+                    ),
+                    exit = slideOutVertically(
+                        animationSpec = tween(400),
+                        targetOffsetY = { fullHeight -> fullHeight }
+                    )
+                ) {
+                    DatesWidget(
+                        modifier = modifier,
+                        state.value.dates
                     ) {
-                        Text(
-                            "Interested to check on more dates? ",
-                            color = Color.White,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Button(
-                            modifier = Modifier.height(35.dp),
-                            onClick = { vm.toggleDatesVisibility(true) },
-                            colors = ButtonDefaults.textButtonColors(
-                                backgroundColor = Constants.getTealColor(),
-                                contentColor = Color.White
-                            )
-                        ) {
-                            Text(
-                                modifier = Modifier.fillMaxHeight(),
-                                text = "Click here",
-                                color = Color.White,
-                                textAlign = TextAlign.Center,
-                                fontSize = 12.sp
-                            )
-                        }
+                        vm.selectDate(it)
                     }
                 }
             }
-            AnimatedVisibility(visible = isDatesVisible,
-                enter = slideInVertically(
-                    animationSpec = tween(400),
-                    initialOffsetY = { fullHeight -> fullHeight }
-                ),
-                exit = slideOutVertically(
-                    animationSpec = tween(400),
-                    targetOffsetY = { fullHeight -> fullHeight }
+        }
+    }
+}
+
+@Composable
+internal fun FooterNote(onClick: () -> Unit) {
+    Box(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "Interested to check on more dates? ",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Button(
+                modifier = Modifier.height(35.dp),
+                onClick = onClick,
+                colors = ButtonDefaults.textButtonColors(
+                    backgroundColor = Constants.getTealColor(),
+                    contentColor = Color.White
                 )
             ) {
-                DatesWidget(
-                    modifier = modifier,
-                    state.value.dates
-                ) {
-                    vm.selectDate(it)
-                }
+                Text(
+                    modifier = Modifier.fillMaxHeight(),
+                    text = "Click here",
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 12.sp
+                )
             }
         }
     }
