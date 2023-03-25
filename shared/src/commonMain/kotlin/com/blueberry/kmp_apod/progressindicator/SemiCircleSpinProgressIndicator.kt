@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 * Source: https://github.com/EhsanMsz/MszProgressIndicator/
 * */
 @Composable
-fun SemiCircleSpinProgressIndicator(
+internal fun SemiCircleSpinProgressIndicator(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colors.primary,
     animationDuration: Int = DefaultAnimationDuration,

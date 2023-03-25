@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -127,14 +128,42 @@ internal fun ApodContent(modifier: Modifier = Modifier, astronomyPicture: Astron
             fontWeight = FontWeight.Bold,
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Image(
-            painter = painter,
-            contentDescription = "Picture of Day",
-            contentScale = ContentScale.Inside,
-            modifier = Modifier
-                .height(250.dp)
-                .fillMaxWidth()
-        )
+        if (astronomyPicture.mediaType == "image") {
+            Image(
+                painter = painter,
+                contentDescription = "Picture of Day",
+                contentScale = ContentScale.Inside,
+                modifier = Modifier
+                    .height(250.dp)
+                    .fillMaxWidth()
+            )
+        }
+        else {
+            val uriHandler = LocalUriHandler.current
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center) {
+                    Button(
+                        modifier = Modifier.height(35.dp),
+                        onClick = {
+                            astronomyPicture.url?.let { uriHandler.openUri(it) }
+                        },
+                        colors = ButtonDefaults.textButtonColors(
+                            backgroundColor = Constants.getTealColor(),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text(
+                            modifier = Modifier.fillMaxHeight(),
+                            text = "Play Video",
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            }
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = astronomyPicture.title,
