@@ -26,7 +26,7 @@ class AstronomyPictureViewModel {
 
     init {
         val currentDate = Clock.System.now().toString()
-        val formattedDate = platformUtil.getFormattedDate(currentDate, FORMAT_ISO8601_DATE, FORMAT_API)
+        val formattedDate = platformUtil.getAPIFormattedDate(currentDate)
         pictureInfo.update { AstronomyPictureState(isLoading = true, selectedDate = currentDate) }
         calculateDates()
         getPictureInfo(formattedDate)
@@ -84,7 +84,6 @@ class AstronomyPictureViewModel {
     }
 
     companion object {
-        const val FORMAT_ISO8601_DATE = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"
         const val FORMAT_API = "yyyy-MM-dd"
         const val FORMAT_DISPLAY = "dd MMMM yyyy"
     }

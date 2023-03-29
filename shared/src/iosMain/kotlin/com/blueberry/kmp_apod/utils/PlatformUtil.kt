@@ -18,4 +18,15 @@ actual class PlatformUtil actual constructor() {
             .run { receivedDate?.let { stringFromDate(it) } }
             ?: date
     }
+
+    actual fun getAPIFormattedDate(date: String): String {
+        val receivedDate = NSDateFormatter()
+            .apply { this.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" }
+            .run { dateFromString(date) }
+
+        return NSDateFormatter()
+            .apply { dateFormat = "yyyy-MM-dd" }
+            .run { receivedDate?.let { stringFromDate(it) } }
+            ?: date
+    }
 }
